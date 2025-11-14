@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 
 <template>
   <section>
-    <h1>Home</h1>
+    <h1>Dashboard</h1>
 
     <Button @click="console.log('click')">Click me</Button>
   </section>

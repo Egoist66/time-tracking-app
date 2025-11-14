@@ -1,15 +1,158 @@
-#UI библиотека
+# Time Tracking App - Cursor Rules
 
-Для создания компонентов используй это команду pnpm dlx shadcn-vue@latest add <component> без yes
+## 🎯 Обзор проекта
+Time Tracking приложение на Vue 3 + TypeScript + Vite с современным UI на базе Shadcn-vue и TailwindCSS v4.
 
-#Проект
+## 🛠️ Технологический стек
 
-Проект написан на Vue 3 и TypeScript.
+### Core
+- **Vue 3.5.22** - Composition API с `<script setup lang="ts">`
+- **TypeScript 5.9.3** - строгий режим
+- **Vite (Rolldown 7.1.14)** - сборщик
+- **Vue Router 4.6.3** - маршрутизация
+- **Pinia 3.0.4** - state management
 
-#Структура проекта
+### UI & Styling
+- **TailwindCSS 4.1.17** - utility-first CSS с CSS переменными
+- **Reka UI 2.6.0** - headless компоненты
+- **Lucide Vue Next** - иконки
+- **Shadcn-vue** архитектура (New York style)
+- **Class Variance Authority** - варианты компонентов
+- **tw-animate-css** - анимации
 
-src/components/ - компоненты
-src/layouts/ - макеты
-src/pages/ - страницы
-src/utils/ - утилиты
-src/styles/ - стили
+## 📁 Структура проекта
+
+```
+src/
+├── main.ts                    # Точка входа: Vue + Pinia + Router
+├── App.vue                    # Root компонент с RouterView и transitions
+├── assets/                    # Статические ресурсы
+├── components/
+│   └── ui/                   # Shadcn-vue компоненты
+│       └── button/           # Button с вариантами (CVA)
+├── lib/
+│   └── utils.ts              # cn() - утилита для merge классов (clsx + twMerge)
+├── pages/                     # Страницы приложения (lazy-loaded)
+│   ├── Dashboard.vue         # Главная (requiresAuth: true)
+│   └── 404.vue               # Not Found страница
+├── routes/
+│   ├── index.ts              # Конфигурация router (history, scrollBehavior, middleware)
+│   ├── routes.ts             # Массив маршрутов (RouteRecordRaw[])
+│   └── middleware/
+│       ├── middleware-wrapper.ts  # Утилита для композиции middleware
+│       ├── middleware-box.ts      # Массив активных middleware
+│       └── route-title/
+│           └── route-title.ts     # Устанавливает document.title из meta
+└── styles/
+    └── style.css             # Глобальные стили, Tailwind imports, темы (light/dark)
+```
+
+## 🚦 Соглашения по коду
+
+### Vue компоненты
+- Всегда используй `<script setup lang="ts">`
+- Props через `defineProps<Props>()`
+- Emits через `defineEmits<Emits>()`
+- Для UI компонентов используй Reka UI Primitive как базу
+
+### TypeScript
+- Строгая типизация, no any
+- Интерфейсы для Props с PascalCase
+- Type imports: `import type { ... }`
+
+### Стилизация
+- TailwindCSS классы (utility-first)
+- Для условных классов используй `cn()` из `@/lib/utils`
+- CSS переменные в OKLCH формате
+- Темная тема через класс `.dark`
+
+### Маршруты
+```typescript
+// routes.ts
+{
+  path: '/example',
+  name: 'example',
+  meta: {
+    title: 'Example Page',      // для document.title
+    requiresAuth: true,          // флаг для auth middleware
+  },
+  component: () => import('@/pages/Example.vue'),
+}
+```
+
+### Middleware
+- Создавай в `routes/middleware/`
+- Используй тип `Middleware` из `middleware-wrapper.ts`
+- Добавляй в `middleware-box.ts` массив
+- Формат:
+```typescript
+export async function myMiddleware(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized
+) {
+  // логика
+}
+```
+
+## 🎨 UI компоненты
+
+### Button
+Локация: `@/components/ui/button`
+```typescript
+// Variants: default, destructive, outline, secondary, ghost, link
+// Sizes: default, sm, lg, icon, icon-sm, icon-lg
+<Button variant="outline" size="sm">Click</Button>
+```
+
+### Добавление новых компонентов
+1. Создай в `src/components/ui/{component-name}/`
+2. Используй Reka UI Primitive как базу
+3. Стилизация через CVA (class-variance-authority)
+4. Экспортируй через `index.ts`
+
+## 🔧 Path Aliases
+- `@/*` → `src/*`
+- Импорты: `import { Button } from '@/components/ui/button'`
+
+## 🎨 Темизация
+- CSS переменные: `--background`, `--foreground`, `--primary`, и т.д.
+- OKLCH цветовая система для лучшей перцепции
+- Темная тема автоматически через `.dark` класс
+- Настройка в `src/styles/style.css`
+
+## 📝 Middleware система
+
+### Текущие middleware
+- `routeTitle` - устанавливает `document.title` из `meta.title`
+
+### Архитектура
+- `middlewareWrapper` - композирует middleware в один
+- `middleware-box.ts` - массив для регистрации
+- Выполняются последовательно через `router.beforeEach`
+
+## 🚀 Команды
+```bash
+pnpm dev      # Запуск dev сервера
+pnpm build    # Production сборка
+pnpm preview  # Просмотр production сборки
+```
+
+## 📦 Package Manager
+**pnpm** - обязательно использовать pnpm, не npm/yarn
+
+## 🎯 Планируемые фичи
+- [ ] Auth middleware для requiresAuth
+- [ ] Login/Register страницы
+- [ ] Pinia stores для state
+- [ ] API слой (axios/fetch)
+- [ ] Дополнительные UI компоненты
+- [ ] Composables для переиспользуемой логики
+
+## 🔐 Best Practices
+1. Lazy-loading страниц через `() => import()`
+2. Типизация meta полей роутера
+3. Переиспользуемая логика в composables (не в компонентах)
+4. Компоненты максимально атомарные
+5. Props только на чтение (не мутируй)
+6. Emits для коммуникации child → parent
+
