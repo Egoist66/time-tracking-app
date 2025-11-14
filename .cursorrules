@@ -1,0 +1,15 @@
+#UI библиотека
+
+Для создания компонентов используй это команду pnpm dlx shadcn-vue@latest add <component> без yes
+
+#Проект
+
+Проект написан на Vue 3 и TypeScript.
+
+#Структура проекта
+
+src/components/ - компоненты
+src/layouts/ - макеты
+src/pages/ - страницы
+src/utils/ - утилиты
+src/styles/ - стили
