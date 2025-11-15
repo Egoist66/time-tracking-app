@@ -3,26 +3,30 @@ import { RouterView } from "vue-router";
 import AppLayout from "@/components/layout/AppLayout.vue";
 import Loader from "@/components/ui/loader/Loader.vue";
 
+// Страницы, которые не должны показывать layout
+const noLayoutPages = ['login', 'auth-callback']
 </script>
 
 <template>
-  <AppLayout>
-    <RouterView v-slot="{ Component, route }">
-      <Suspense>
-        <template v-if="route.name !== 'not-found'" #default>
-          <transition name="route" mode="out-in">
+  <RouterView v-slot="{ Component, route }">
+    <Suspense>
+      <template #default>
+        <!-- Страницы с layout (авторизованные) -->
+        <AppLayout v-if="!noLayoutPages.includes(route.name as string)">
+          <transition v-if="route.name !== 'not-found'" name="route" mode="out-in">
             <component :is="Component" />
           </transition>
-        </template>
-        <template v-else #default>
-          <component :is="Component" />
-        </template>
-        <template #fallback>
-          <Loader />
-        </template>
-      </Suspense>
-    </RouterView>
-  </AppLayout>
+          <component v-else :is="Component" />
+        </AppLayout>
+        
+        <!-- Страницы без layout (логин, callback) -->
+        <component v-else :is="Component" />
+      </template>
+      <template #fallback>
+        <Loader />
+      </template>
+    </Suspense>
+  </RouterView>
 </template>
 
 <style scoped></style>

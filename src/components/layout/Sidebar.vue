@@ -9,10 +9,10 @@ import Navigation from "./Navigation.vue";
 import Profile from "../profile/Profile.vue";
 
 const projects = shallowRef([
-  { id: 1, name: "Website Redesign", color: "bg-blue-500" },
-  { id: 2, name: "Mobile App", color: "bg-purple-500" },
-  { id: 3, name: "Marketing Campaign", color: "bg-green-500" },
-  { id: 4, name: "Client Meeting", color: "bg-orange-500" },
+  { id: 1, name: "Редизайн сайта", color: "bg-blue-500" },
+  { id: 2, name: "Мобильное приложение", color: "bg-purple-500" },
+  { id: 3, name: "Маркетинговая кампания", color: "bg-green-500" },
+  { id: 4, name: "Встреча с клиентом", color: "bg-orange-500" },
 ]);
 
 
@@ -61,7 +61,7 @@ const timerStore = useTimerStore()
         class="w-full bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white"
       >
         <Plus :size="16" class="mr-2" />
-        Start Timer
+        Запустить таймер
       </Button>
     </div>
 

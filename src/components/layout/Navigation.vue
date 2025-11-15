@@ -12,11 +12,11 @@ import Separator from "../ui/separator/Separator.vue";
 import { shallowRef } from "vue";
 
 const appLinks = shallowRef<{ icon: LucideIcon; to: string; label: string }[]>([
-  { icon: LayoutDashboard, to: "/dashboard", label: "Dashboard" },
-  { icon: Clock, to: "/time-entries", label: "Time Entries" },
-  { icon: FolderKanban, to: "/projects", label: "Projects" },
-  { icon: FileBarChart, to: "/reports", label: "Reports" },
-  { icon: Settings, to: "/settings", label: "Settings" },
+  { icon: LayoutDashboard, to: "/dashboard", label: "Дашборд" },
+  { icon: Clock, to: "/time-entries", label: "Учет времени" },
+  { icon: FolderKanban, to: "/projects", label: "Проекты" },
+  { icon: FileBarChart, to: "/reports", label: "Отчеты" },
+  { icon: Settings, to: "/settings", label: "Настройки" },
 ]);
 
 
@@ -43,7 +43,7 @@ defineProps<{
           <Separator class="bg-gray-800 mb-4" />
           <div class="px-3 mb-2">
             <span class="text-xs font-semibold text-gray-500 uppercase"
-              >Projects</span
+              >Проекты</span
             >
           </div>
           <div class="space-y-1">

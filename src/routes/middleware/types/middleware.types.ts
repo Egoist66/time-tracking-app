@@ -1,7 +1,7 @@
-import type { RouteLocationNormalized } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 export type Middleware = (
     to: RouteLocationNormalized,
     from: RouteLocationNormalized
-  ) => Promise<void>;
+  ) => Promise<void | RouteLocationRaw>;
   

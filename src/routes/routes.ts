@@ -2,11 +2,27 @@ import type { RouteRecordRaw } from 'vue-router'
 
 export const routes: RouteRecordRaw[] = [
     {
+      path: '/login',
+      name: 'login',
+      meta: {
+        title: 'Вход в систему',
+      },
+      component: () => import('@/pages/Login.vue'),
+    },
+    {
+      path: '/auth/callback',
+      name: 'auth-callback',
+      meta: {
+        title: 'Авторизация...',
+      },
+      component: () => import('@/pages/AuthCallback.vue'),
+    },
+    {
       path: '/',
       alias: '/dashboard',
       name: 'dashboard',
       meta: {
-        title: 'Dashboard',
+        title: 'Дашборд',
         requiresAuth: true,
       
 
@@ -17,7 +33,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/time-entries',
       name: 'time-entries',
       meta: {
-        title: 'Time Entries',
+        title: 'Учет времени',
         requiresAuth: true,
       },
       component: () => import('@/pages/TimeEntries.vue'),
@@ -26,7 +42,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/projects',
       name: 'projects',
       meta: {
-        title: 'Projects',
+        title: 'Проекты',
         requiresAuth: true,
       },
       component: () => import('@/pages/Projects.vue'),
@@ -35,7 +51,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/reports',
       name: 'reports',
       meta: {
-        title: 'Reports',
+        title: 'Отчеты',
         requiresAuth: true,
       },
       component: () => import('@/pages/Reports.vue'),
@@ -44,7 +60,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/settings',
       name: 'settings',
       meta: {
-        title: 'Settings',
+        title: 'Настройки',
         requiresAuth: true,
       },
       component: () => import('@/pages/Settings.vue'),
@@ -53,7 +69,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/projects/:id',
       name: 'project',
       meta: {
-        title: 'Project',
+        title: 'Проект',
         requiresAuth: true,
       },
       component: () => import('@/pages/Project.vue'),
@@ -62,7 +78,8 @@ export const routes: RouteRecordRaw[] = [
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       meta: {
-        title: '404 Page Not Found',
+        title: '404 Страница не найдена',
+        requiresAuth: true,
       },
       component: () => import('@/pages/404.vue'),
     },

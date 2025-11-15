@@ -38,9 +38,9 @@ const timerStore = useTimerStore()
   >
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Time Entry</DialogTitle>
+        <DialogTitle>Учет времени</DialogTitle>
         <DialogDescription>
-          Start tracking your time for a new task
+          Начните отслеживать время для новой задачи
         </DialogDescription>
       </DialogHeader>
 
@@ -48,12 +48,12 @@ const timerStore = useTimerStore()
         <!-- Task Name -->
         <div class="space-y-2">
           <label class="text-sm font-medium leading-none" for="task-name">
-            What are you working on?
+            Над чем вы работаете?
           </label>
           <Input
             id="task-name"
             v-model="timerStore.timerTaskName"
-            placeholder="Enter task name..."
+            placeholder="Введите название задачи..."
             class="w-full"
           />
         </div>
@@ -61,11 +61,11 @@ const timerStore = useTimerStore()
         <!-- Project Selection -->
         <div class="space-y-2">
           <label class="text-sm font-medium leading-none" for="project">
-            Project
+            Проект
           </label>
           <Select v-model="timerStore.timerProject">
             <SelectTrigger id="project" class="w-full">
-              <SelectValue placeholder="Select a project" />
+              <SelectValue placeholder="Выберите проект" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
@@ -85,12 +85,12 @@ const timerStore = useTimerStore()
         <!-- Description (Optional) -->
         <div class="space-y-2">
           <label class="text-sm font-medium leading-none" for="description">
-            Description <span class="text-gray-400">(optional)</span>
+            Описание <span class="text-gray-400">(опционально)</span>
           </label>
           <Input
             id="description"
             v-model="timerStore.timerDescription"
-            placeholder="Add details..."
+            placeholder="Добавьте детали..."
             class="w-full"
           />
         </div>
@@ -112,7 +112,7 @@ const timerStore = useTimerStore()
           class="cursor-pointer"
           @click="$emit('update:isTimerDialogOpen', false)"
         >
-          Cancel
+          Отмена
         </Button>
         <Button
           type="button"
@@ -120,7 +120,7 @@ const timerStore = useTimerStore()
           @click="$emit('startTimer')"
         >
           <Clock :size="16" class="mr-2" />
-          Start Timer
+          Запустить таймер
         </Button>
       </DialogFooter>
     </DialogContent>

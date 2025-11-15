@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, Bell } from 'lucide-vue-next'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Search, Bell, LogOut } from 'lucide-vue-next'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth.store'
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 const currentDate = computed(() => {
   const date = new Date()
@@ -15,6 +21,21 @@ const currentDate = computed(() => {
     minute: '2-digit'
   })
 })
+
+const userInitials = computed(() => {
+  if (!authStore.user?.name) return 'U'
+  return authStore.user.name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+})
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -28,23 +49,42 @@ const currentDate = computed(() => {
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ currentDate }}</p>
       </div>
 
-      <!-- Search and Notifications -->
+      <!-- Search, Notifications and User -->
       <div class="flex items-center gap-4">
         <!-- Search -->
         <div class="relative">
           <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" :size="18" />
           <Input
             type="search"
-            placeholder="Search..."
+            placeholder="Поиск..."
             class="pl-10 w-64 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
           />
         </div>
 
-        <!-- Notifications -->
-        <Button variant="ghost" size="icon" class="relative">
-          <Bell :size="20" />
-          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-        </Button>
+        <!-- User Avatar and Logout -->
+        <div v-if="authStore.user" class="flex items-center gap-2 pl-3 border-l border-gray-200 dark:border-gray-700">
+          <Avatar class="w-8 h-8 cursor-pointer">
+            <AvatarImage 
+              v-if="authStore.user.photo?.image_60x60" 
+              :src="authStore.user.photo.image_60x60" 
+              :alt="authStore.user.name" 
+            />
+            <AvatarFallback class="bg-primary text-primary-foreground text-xs">
+              {{ userInitials }}
+            </AvatarFallback>
+          </Avatar>
+          
+          <!-- Logout Button -->
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            class="text-gray-500 hover:text-red-600 dark:hover:text-red-400"
+            @click="handleLogout"
+            title="Выйти"
+          >
+            <LogOut :size="18" />
+          </Button>
+        </div>
       </div>
     </div>
   </header>
