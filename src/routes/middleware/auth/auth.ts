@@ -12,7 +12,9 @@ export async function authMiddleware(
   if (requiresAuth) {
     // Если токен истек, пытаемся обновить его
     if (authStore.isTokenExpired() && authStore.accessToken) {
+      authStore.isLoading = true
       await authStore.refreshAccessToken()
+      authStore.isLoading = false
     }
 
     if (!authStore.isAuthenticated) {
@@ -20,7 +22,6 @@ export async function authMiddleware(
       
       return {
         name: 'login',
-     
       }
     }
   }

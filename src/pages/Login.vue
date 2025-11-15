@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { PageLoader } from '@/components/ui/loader'
 import { useAuthStore } from '@/store/auth.store'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const isLoading = ref(false)
+const isRedirecting = ref(false)
+
+// Показываем прелоадер при загрузке из store или при редиректе
+const showPageLoader = computed(() => authStore.isLoading || isRedirecting.value)
 
 const handleAsanaAuth = () => {
     // Генерируем OAuth URL с правильными параметрами из env
@@ -33,7 +38,10 @@ const isDev = import.meta.env.DEV
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Прелоадер при редиректе -->
+    <PageLoader v-if="showPageLoader" message="Перенаправление..." />
+    
+    <div v-else class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
         <!-- Декоративные элементы с фиолетовым свечением -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px]" />

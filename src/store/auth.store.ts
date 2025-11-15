@@ -34,6 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
   const expiresAt = ref<number | null>(null);
   const user = ref<AsanaUser | null>(null);
   const isLoading = ref(false);
+  const isInitializing = ref(true);
   const error = ref<string | null>(null);
 
   // Computed
@@ -297,6 +298,33 @@ export const useAuthStore = defineStore("auth", () => {
     return state === savedState;
   };
 
+  // Инициализация авторизации при загрузке приложения
+  const initializeAuth = async () => {
+    isInitializing.value = true;
+    
+    try {
+      // Загружаем данные из localStorage
+      loadFromStorage();
+      
+      // Если есть токен, проверяем его валидность
+      if (accessToken.value) {
+        // Если токен истек, пытаемся обновить
+        if (isTokenExpired()) {
+          await refreshAccessToken();
+        } else if (!user.value) {
+          // Если токен валиден, но нет данных пользователя, загружаем их
+          await fetchUser();
+        }
+      }
+    } catch (err) {
+      console.error("Ошибка инициализации авторизации:", err);
+    } finally {
+      // Даем небольшую задержку для плавной анимации (минимум 500ms)
+      await new Promise(resolve => setTimeout(resolve, 500));
+      isInitializing.value = false;
+    }
+  };
+
   // Инициализация при загрузке store
   loadFromStorage();
 
@@ -305,6 +333,7 @@ export const useAuthStore = defineStore("auth", () => {
     accessToken,
     user,
     isLoading,
+    isInitializing,
     error,
 
     // Computed
@@ -319,5 +348,6 @@ export const useAuthStore = defineStore("auth", () => {
     verifyState,
     isTokenExpired,
     loginWithToken,
+    initializeAuth,
   };
 });

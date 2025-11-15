@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/auth.store'
-import { Loader } from '@/components/ui/loader'
+import { PageLoader } from '@/components/ui/loader'
 
 const router = useRouter()
 const route = useRoute()
@@ -78,21 +78,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-[#0A0E27] p-4">
+  <!-- Loading State - Прелоадер на всю страницу -->
+  <PageLoader v-if="status === 'loading'" message="Авторизация..." />
+  
+  <div v-else class="min-h-screen flex items-center justify-center bg-[#0A0E27] p-4">
     <div class="w-full max-w-md text-center">
-      <!-- Loading State -->
-      <div v-if="status === 'loading'" class="space-y-6">
-        <div class="flex justify-center">
-          <Loader class="w-16 h-16 text-[#5B52FF]" />
-        </div>
-        <div class="space-y-2">
-          <h2 class="text-2xl font-bold text-white">Авторизация...</h2>
-          <p class="text-gray-400">Пожалуйста, подождите</p>
-        </div>
-      </div>
 
       <!-- Success State -->
-      <div v-else-if="status === 'success'" class="space-y-6">
+      <div v-if="status === 'success'" class="space-y-6">
         <div class="flex justify-center">
           <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center">
             <svg
