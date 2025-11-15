@@ -4,5 +4,10 @@
       "source": "/((?!api\\/.*).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "ASANA_CLIENT_ID": "@asana-client-id",
+    "ASANA_CLIENT_SECRET": "@asana-client-secret",
+    "ASANA_REDIRECT_URI": "@asana-redirect-uri"
+  }
 }

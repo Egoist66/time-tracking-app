@@ -102,24 +102,26 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
 
     try {
-      const params = new URLSearchParams({
-        grant_type: "authorization_code",
-        client_id: import.meta.env.VITE_ASANA_CLIENT_ID,
-        client_secret: import.meta.env.VITE_ASANA_CLIENT_SECRET,
-        redirect_uri: import.meta.env.VITE_ASANA_REDIRECT_URI,
-        code: code,
-      });
+      // Используем наш backend endpoint вместо прямого запроса к Asana
+      // Это безопасно, т.к. client_secret остается на сервере
+      const apiUrl = import.meta.env.DEV 
+        ? 'http://localhost:5173/api/auth/token'
+        : '/api/auth/token';
 
-      const response = await fetch("https://app.asana.com/-/oauth_token", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: params.toString(),
+        body: JSON.stringify({
+          grant_type: "authorization_code",
+          code: code,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Не удалось обменять код на токен");
+        const errorData = await response.json();
+        throw new Error(errorData.error_description || errorData.error || "Не удалось обменять код на токен");
       }
 
       const data = await response.json();
@@ -170,19 +172,20 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     try {
-      const params = new URLSearchParams({
-        grant_type: "refresh_token",
-        client_id: import.meta.env.VITE_ASANA_CLIENT_ID,
-        client_secret: import.meta.env.VITE_ASANA_CLIENT_SECRET,
-        refresh_token: refreshToken.value,
-      });
+      // Используем наш backend endpoint для обновления токена
+      const apiUrl = import.meta.env.DEV 
+        ? 'http://localhost:5173/api/auth/token'
+        : '/api/auth/token';
 
-      const response = await fetch("https://app.asana.com/-/oauth_token", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: params.toString(),
+        body: JSON.stringify({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken.value,
+        }),
       });
 
       if (!response.ok) {
