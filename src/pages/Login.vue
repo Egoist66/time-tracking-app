@@ -35,7 +35,7 @@ const handleQuickLogin = async () => {
 // Проверяем, доступен ли PAT для быстрого входа
 const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN || !!import.meta.env.ASANA_TOKEN
 //const isDev = import.meta.env.DEV
-const isProd = import.meta.env.PROD
+//const isProd = import.meta.env.PROD
 
 </script>
 
@@ -77,8 +77,8 @@ const isProd = import.meta.env.PROD
 
                 <CardContent class="space-y-6 pt-2">
                     <!-- Кнопка авторизации через Asana OAuth -->
-                    <Button v-if="!isLoading && isProd" type="button"
-                        class="w-full h-14 text-base font-semibold gap-3 bg-[#5B52FF] hover:bg-[#4B42EF] text-white shadow-lg shadow-[#5B52FF]/30 transition-all duration-200"
+                    <Button v-if="!isLoading" type="button"
+                        class="w-full h-14 text-base font-semibold cursor-pointer gap-3 bg-[#5B52FF] hover:bg-[#4B42EF] text-white shadow-lg shadow-[#5B52FF]/30 transition-all duration-200"
                         size="lg" :disabled="isLoading" @click="handleAsanaAuth">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                             fill="currentColor">
@@ -92,13 +92,11 @@ const isProd = import.meta.env.PROD
                     <div v-if="hasPersonalToken" class="space-y-3">
                         <div class="relative">
                             <Separator class="my-2" />
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <span class="bg-[#151B3B] px-2 text-xs text-gray-500">для разработки</span>
-                            </div>
+                           
                         </div>
 
                         <Button type="button" variant="outline"
-                            class="w-full h-12 text-sm font-medium gap-2 border-[#252D51] hover:bg-[#1A2142] text-gray-300"
+                            class="w-full h-12 text-sm font-medium gap-2 border-[#252D51] hover:bg-[#5B52FF] hover:text-white text-black cursor-pointer"
                             :disabled="isLoading" @click="handleQuickLogin">
                             <svg v-if="!isLoading" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
