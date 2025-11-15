@@ -17,7 +17,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Clock } from "lucide-vue-next";
-import { shallowRef } from "vue";
 import { useTimerStore } from "@/store/timer.store";
 
 const {
