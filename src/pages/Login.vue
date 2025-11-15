@@ -11,6 +11,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const isLoading = ref(false)
 const isRedirecting = ref(false)
+const isProd = import.meta.env.PROD
 
 // Показываем прелоадер при загрузке из store или при редиректе
 const showPageLoader = computed(() => authStore.isLoading || isRedirecting.value)
@@ -75,7 +76,7 @@ const isDev = import.meta.env.DEV
 
                 <CardContent class="space-y-6 pt-2">
                     <!-- Кнопка авторизации через Asana OAuth -->
-                    <Button type="button"
+                    <Button v-if="!isLoading && isProd" type="button"
                         class="w-full h-14 text-base font-semibold gap-3 bg-[#5B52FF] hover:bg-[#4B42EF] text-white shadow-lg shadow-[#5B52FF]/30 transition-all duration-200"
                         size="lg" :disabled="isLoading" @click="handleAsanaAuth">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
