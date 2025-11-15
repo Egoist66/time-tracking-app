@@ -119,12 +119,23 @@ export const useAuthStore = defineStore("auth", () => {
         }),
       });
 
+      // Читаем тело ответа как текст для диагностики
+      const responseText = await response.text();
+      console.log('Server response status:', response.status);
+      console.log('Server response:', responseText);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error_description || errorData.error || "Не удалось обменять код на токен");
+        // Пытаемся распарсить как JSON
+        try {
+          const errorData = JSON.parse(responseText);
+          throw new Error(errorData.error_description || errorData.error || `Server error: ${response.status}`);
+        } catch (parseError) {
+          // Если не JSON, показываем текст ошибки
+          throw new Error(`Server error (${response.status}): ${responseText.substring(0, 100)}`);
+        }
       }
 
-      const data = await response.json();
+      const data = JSON.parse(responseText);
       setTokens(data.access_token, data.refresh_token, data.expires_in);
 
       // Получаем информацию о пользователе

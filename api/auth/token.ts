@@ -20,31 +20,38 @@ interface AsanaErrorResponse {
  * Это серверный endpoint, который безопасно хранит client_secret
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Включаем CORS для нашего фронтенда
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:4173',
-    'https://time-tracking-app-sigma.vercel.app',
-  ]
-
-  const origin = req.headers.origin || ''
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin)
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  }
-
-  // Обрабатываем preflight запрос (CORS)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end()
-  }
-
-  // Разрешаем только POST запросы
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' })
-  }
-
   try {
+    console.log('=== Function invoked ===')
+    console.log('Method:', req.method)
+    console.log('Headers:', req.headers)
+    
+    // Включаем CORS для нашего фронтенда
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:4173',
+      'https://time-tracking-app-sigma.vercel.app',
+    ]
+
+    const origin = req.headers.origin || ''
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin)
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    }
+
+    // Обрабатываем preflight запрос (CORS)
+    if (req.method === 'OPTIONS') {
+      console.log('OPTIONS request - returning 200')
+      return res.status(200).end()
+    }
+
+    // Разрешаем только POST запросы
+    if (req.method !== 'POST') {
+      console.log('Invalid method:', req.method)
+      return res.status(405).json({ error: 'Method Not Allowed' })
+    }
+
+    console.log('Body:', req.body)
     const { code, grant_type = 'authorization_code', refresh_token } = req.body
 
     // Валидация входных данных
@@ -57,13 +64,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Получаем секреты из environment variables
-    const clientId = process.env.VITE_ASANA_CLIENT_ID
-    const clientSecret = process.env.VITE_ASANA_CLIENT_SECRET
-    const redirectUri = process.env.VITE_ASANA_REDIRECT_URI
+    // В Vercel Functions используем переменные без VITE_ префикса (они для build time)
+    const clientId = process.env.VITE_ASANA_CLIENT_ID || process.env.ASANA_CLIENT_ID
+    const clientSecret = process.env.VITE_ASANA_CLIENT_SECRET || process.env.ASANA_CLIENT_SECRET
+    const redirectUri = process.env.VITE_ASANA_REDIRECT_URI || process.env.ASANA_REDIRECT_URI
+
+    console.log('Environment check:', {
+      hasClientId: !!clientId,
+      hasClientSecret: !!clientSecret,
+      hasRedirectUri: !!redirectUri,
+      availableEnvKeys: Object.keys(process.env).filter(k => k.includes('ASANA'))
+    })
 
     if (!clientId || !clientSecret || !redirectUri) {
-      console.error('Missing environment variables:', { clientId: !!clientId, clientSecret: !!clientSecret, redirectUri: !!redirectUri })
-      return res.status(500).json({ error: 'Server configuration error' })
+      console.error('Missing environment variables')
+      return res.status(500).json({ 
+        error: 'Server configuration error',
+        details: 'Missing required environment variables (ASANA_CLIENT_ID, ASANA_CLIENT_SECRET, ASANA_REDIRECT_URI)'
+      })
     }
 
     // Формируем параметры для запроса к Asana
@@ -108,11 +126,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       token_type: data.token_type,
     })
   } catch (error) {
-    console.error('Token exchange error:', error)
-    return res.status(500).json({
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    })
+    console.error('=== CRITICAL ERROR ===')
+    console.error('Error type:', error?.constructor?.name)
+    console.error('Error message:', error instanceof Error ? error.message : String(error))
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
+    try {
+      return res.status(500).json({
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        type: error?.constructor?.name || 'Unknown'
+      })
+    } catch (jsonError) {
+      // Если даже JSON не можем отправить, отправляем текст
+      console.error('Failed to send JSON response:', jsonError)
+      return res.status(500).send('Critical server error')
+    }
   }
 }
 
