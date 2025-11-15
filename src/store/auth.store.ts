@@ -106,7 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
       // Используем наш backend endpoint вместо прямого запроса к Asana
       // Это безопасно, т.к. client_secret остается на сервере
       const apiUrl = import.meta.env.DEV 
-        ? 'http://localhost:5173/api/auth/token'
+        ? 'https://time-tracking-app-sigma.vercel.app/api/auth/token'
         : '/api/auth/token';
 
       const response = await fetch(apiUrl, {

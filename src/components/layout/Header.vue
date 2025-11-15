@@ -40,7 +40,7 @@ const handleLogout = () => {
 
 <template>
   <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between header-wrapper">
       <!-- Title and Date -->
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -90,3 +90,12 @@ const handleLogout = () => {
   </header>
 </template>
 
+
+<style scoped>
+@media(max-width: 663px){
+  .header-wrapper {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
+</style>
