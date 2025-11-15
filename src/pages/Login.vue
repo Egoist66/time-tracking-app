@@ -35,7 +35,7 @@ const handleQuickLogin = async () => {
 // Проверяем, доступен ли PAT для быстрого входа
 const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN || !!import.meta.env.ASANA_TOKEN
 //const isDev = import.meta.env.DEV
-//const isProd = import.meta.env.PROD
+const isProd = import.meta.env.PROD
 
 </script>
 
@@ -89,7 +89,7 @@ const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN || !!import.meta.env
                     </Button>
 
                     <!-- Быстрый вход для разработки -->
-                    <div v-if="hasPersonalToken" class="space-y-3">
+                    <div v-if="hasPersonalToken && !isProd" class="space-y-3">
                         <div class="relative">
                             <Separator class="my-2" />
                            
