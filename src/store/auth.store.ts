@@ -186,7 +186,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       // Используем наш backend endpoint для обновления токена
       const apiUrl = import.meta.env.DEV 
-        ? 'http://localhost:5173/api/auth/token'
+        ? 'https://time-tracking-app-sigma.vercel.app/api/auth/token'
         : '/api/auth/token';
 
       const response = await fetch(apiUrl, {
