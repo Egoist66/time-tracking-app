@@ -1,0 +1,10 @@
+.route-enter-active,
+.route-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.route-enter-from,
+.route-leave-to {
+  opacity: 0;
+ 
+}

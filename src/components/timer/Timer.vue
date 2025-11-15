@@ -18,28 +18,22 @@ import {
 } from "@/components/ui/dialog";
 import { Clock } from "lucide-vue-next";
 import { shallowRef } from "vue";
+import { useTimerStore } from "@/store/timer.store";
 
 const {
   isTimerDialogOpen,
-  timerTaskName,
-  timerProject,
-  timerDescription,
   projects,
 } = defineProps<{
-  isTimerDialogOpen: boolean;
-  timerTaskName: string;
-  timerProject: string;
-  timerDescription: string;
+  isTimerDialogOpen: boolean;   
   projects: any[];
 }>();
 
-const timerTaskNameValue = shallowRef<string>(timerTaskName);
-const timerProjectValue = shallowRef<string>(timerProject);
-const timerDescriptionValue = shallowRef<string>(timerDescription);
+const timerStore = useTimerStore()
 </script>
 
 <template>
   <Dialog
+  
     :open="isTimerDialogOpen"
     @update:open="$emit('update:isTimerDialogOpen', $event)"
   >
@@ -59,7 +53,7 @@ const timerDescriptionValue = shallowRef<string>(timerDescription);
           </label>
           <Input
             id="task-name"
-            v-model="timerTaskNameValue"
+            v-model="timerStore.timerTaskName"
             placeholder="Enter task name..."
             class="w-full"
           />
@@ -70,7 +64,7 @@ const timerDescriptionValue = shallowRef<string>(timerDescription);
           <label class="text-sm font-medium leading-none" for="project">
             Project
           </label>
-          <Select v-model="timerProjectValue">
+          <Select v-model="timerStore.timerProject">
             <SelectTrigger id="project" class="w-full">
               <SelectValue placeholder="Select a project" />
             </SelectTrigger>
@@ -96,7 +90,7 @@ const timerDescriptionValue = shallowRef<string>(timerDescription);
           </label>
           <Input
             id="description"
-            v-model="timerDescriptionValue"
+            v-model="timerStore.timerDescription"
             placeholder="Add details..."
             class="w-full"
           />

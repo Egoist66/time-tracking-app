@@ -6,11 +6,13 @@ import { computed } from 'vue'
 
 const currentDate = computed(() => {
   const date = new Date()
-  return date.toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  return date.toLocaleString(navigator.language, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   })
 })
 </script>
