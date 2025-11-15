@@ -57,9 +57,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Получаем секреты из environment variables
-    const clientId = process.env.ASANA_CLIENT_ID
-    const clientSecret = process.env.ASANA_CLIENT_SECRET
-    const redirectUri = process.env.ASANA_REDIRECT_URI
+    const clientId = process.env.VITE_ASANA_CLIENT_ID
+    const clientSecret = process.env.VITE_ASANA_CLIENT_SECRET
+    const redirectUri = process.env.VITE_ASANA_REDIRECT_URI
 
     if (!clientId || !clientSecret || !redirectUri) {
       console.error('Missing environment variables:', { clientId: !!clientId, clientSecret: !!clientSecret, redirectUri: !!redirectUri })
