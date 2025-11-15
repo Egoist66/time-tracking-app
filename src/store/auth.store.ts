@@ -232,12 +232,18 @@ export const useAuthStore = defineStore("auth", () => {
     const state = Math.random().toString(36).substring(2, 15);
     sessionStorage.setItem("oauth_state", state);
 
+    // Используем правильные scopes как в Asana OAuth
+    // openid - OpenID Connect authentication
+    // email - доступ к email пользователя
+    // profile - доступ к профилю пользователя
+    // default - базовый доступ к Asana API
+    // identity - доступ к идентификационным данным
     const params = new URLSearchParams({
+      response_type: "code",
       client_id: clientId,
       redirect_uri: redirectUri,
-      response_type: "code",
+      scope: "openid email profile default identity",
       state: state,
-      scope: "default",
     });
 
     return `https://app.asana.com/-/oauth_authorize?${params.toString()}`;
