@@ -11,7 +11,6 @@ const router = useRouter()
 const authStore = useAuthStore()
 const isLoading = ref(false)
 const isRedirecting = ref(false)
-const isProd = import.meta.env.PROD
 
 // Показываем прелоадер при загрузке из store или при редиректе
 const showPageLoader = computed(() => authStore.isLoading || isRedirecting.value)
@@ -36,6 +35,8 @@ const handleQuickLogin = async () => {
 // Проверяем, доступен ли PAT для быстрого входа
 const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN
 const isDev = import.meta.env.DEV
+const isProd = import.meta.env.PROD
+
 </script>
 
 <template>
@@ -88,7 +89,7 @@ const isDev = import.meta.env.DEV
                     </Button>
 
                     <!-- Быстрый вход для разработки -->
-                    <div v-if="isDev && hasPersonalToken" class="space-y-3">
+                    <div v-if="hasPersonalToken" class="space-y-3">
                         <div class="relative">
                             <Separator class="my-2" />
                             <div class="absolute inset-0 flex items-center justify-center">
