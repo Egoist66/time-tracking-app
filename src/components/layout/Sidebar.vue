@@ -96,7 +96,7 @@ defineProps<{
           <p class="text-sm font-medium text-white truncate">John Davis</p>
           <p class="text-xs text-gray-400 truncate">john@company.com</p>
         </div>
-        <Button variant="ghost" size="icon-sm" class="text-gray-400 hover:text-black">
+        <Button @click="emit('toggleSidebar')" variant="ghost" size="icon-sm" class="cursor-pointer text-gray-400 hover:text-black">
           <Menu :size="16" />
         </Button>
       </div>
