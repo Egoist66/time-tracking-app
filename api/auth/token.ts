@@ -1,15 +1,25 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 /**
+ * Интерфейсы для типизации ответов Asana OAuth API
+ */
+interface AsanaTokenResponse {
+  access_token: string
+  refresh_token: string
+  expires_in: number
+  token_type: string
+}
+
+interface AsanaErrorResponse {
+  error?: string
+  error_description?: string
+}
+
+/**
  * Vercel Serverless Function для обмена authorization code на access token
  * Это серверный endpoint, который безопасно хранит client_secret
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Разрешаем только POST запросы
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' })
-  }
-
   // Включаем CORS для нашего фронтенда
   const allowedOrigins = [
     'http://localhost:5173',
@@ -24,9 +34,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   }
 
-  // Обрабатываем preflight запрос
+  // Обрабатываем preflight запрос (CORS)
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
+  }
+
+  // Разрешаем только POST запросы
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' })
   }
 
   try {
@@ -74,15 +89,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: params.toString(),
     })
 
-    const data = await response.json()
-
     if (!response.ok) {
-      console.error('Asana OAuth error:', data)
+      const errorData = await response.json() as AsanaErrorResponse
+      console.error('Asana OAuth error:', errorData)
       return res.status(response.status).json({
-        error: data.error || 'Token exchange failed',
-        error_description: data.error_description || 'Unknown error',
+        error: errorData.error || 'Token exchange failed',
+        error_description: errorData.error_description || 'Unknown error',
       })
     }
+
+    const data = await response.json() as AsanaTokenResponse
 
     // Возвращаем токены клиенту
     return res.status(200).json({
