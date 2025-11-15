@@ -4,6 +4,7 @@
 
 <template>
 
-  <h1>Dashboard</h1>
+  <h1>Reports</h1>
   
 </template>
+

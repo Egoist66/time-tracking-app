@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView } from "vue-router";
+import AppLayout from "@/components/layout/AppLayout.vue";
 </script>
 
 <template>
-  <div id="app-layout">
+  <AppLayout>
     <RouterView v-slot="{ Component }">
       <transition name="route" mode="out-in">
         <component :is="Component" />
       </transition>
     </RouterView>
-  </div>
+  </AppLayout>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

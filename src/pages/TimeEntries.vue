@@ -4,6 +4,7 @@
 
 <template>
 
-  <h1>Dashboard</h1>
+  <h1>Time Entries</h1>
   
 </template>
+

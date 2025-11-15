@@ -14,6 +14,42 @@ export const routes: RouteRecordRaw[] = [
       component: () => import('@/pages/Dashboard.vue'),
     },
     {
+      path: '/time-entries',
+      name: 'time-entries',
+      meta: {
+        title: 'Time Entries',
+        requiresAuth: true,
+      },
+      component: () => import('@/pages/TimeEntries.vue'),
+    },
+    {
+      path: '/projects',
+      name: 'projects',
+      meta: {
+        title: 'Projects',
+        requiresAuth: true,
+      },
+      component: () => import('@/pages/Projects.vue'),
+    },
+    {
+      path: '/reports',
+      name: 'reports',
+      meta: {
+        title: 'Reports',
+        requiresAuth: true,
+      },
+      component: () => import('@/pages/Reports.vue'),
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      meta: {
+        title: 'Settings',
+        requiresAuth: true,
+      },
+      component: () => import('@/pages/Settings.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       meta: {
