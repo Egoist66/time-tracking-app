@@ -50,6 +50,15 @@ export const routes: RouteRecordRaw[] = [
       component: () => import('@/pages/Settings.vue'),
     },
     {
+      path: '/projects/:id',
+      name: 'project',
+      meta: {
+        title: 'Project',
+        requiresAuth: true,
+      },
+      component: () => import('@/pages/Project.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       meta: {

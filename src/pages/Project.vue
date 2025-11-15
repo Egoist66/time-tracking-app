@@ -4,6 +4,8 @@
 
 <template>
 
-  <h1>Hi</h1>
+  <h1>
+    {{ $route.params.id }}
+  </h1>
   
 </template>
