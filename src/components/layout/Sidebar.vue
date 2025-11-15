@@ -45,7 +45,7 @@ defineProps<{
       <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
         <Clock :size="20" />
       </div>
-      <span class="text-lg font-semibold">TimeTrack</span>
+      <span @click="$router.push('/')" class="text-lg cursor-pointer font-semibold">TimeTrack</span>
       <Button @click="emit('toggleSidebar')" variant="ghost" size="icon-sm" class="ml-auto cursor-pointer text-gray-400 hover:text-black">
         <Menu :size="20" />
       </Button>
