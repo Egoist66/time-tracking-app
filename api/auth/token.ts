@@ -20,24 +20,26 @@ interface AsanaErrorResponse {
  * Это серверный endpoint, который безопасно хранит client_secret
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    console.log('=== Function invoked ===')
-    console.log('Method:', req.method)
-    console.log('Headers:', req.headers)
-    
-    // Включаем CORS для нашего фронтенда
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:4173',
-      'https://time-tracking-app-sigma.vercel.app',
-    ]
+  // CORS headers должны быть установлены ДО любых других операций
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'https://time-tracking-app-sigma.vercel.app',
+  ]
 
-    const origin = req.headers.origin || ''
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin)
-      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    }
+  const origin = req.headers.origin || ''
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  }
+
+  try {
+    console.log('=== Token Exchange Function Started ===')
+    console.log('Timestamp:', new Date().toISOString())
+    console.log('Method:', req.method)
+    console.log('Origin:', origin)
+    console.log('URL:', req.url)
 
     // Обрабатываем preflight запрос (CORS)
     if (req.method === 'OPTIONS') {
@@ -64,17 +66,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Получаем секреты из environment variables
-    // В Vercel Functions используем переменные без VITE_ префикса (они для build time)
-    const clientId = process.env.VITE_ASANA_CLIENT_ID || process.env.ASANA_CLIENT_ID
-    const clientSecret = process.env.VITE_ASANA_CLIENT_SECRET || process.env.ASANA_CLIENT_SECRET
-    const redirectUri = process.env.VITE_ASANA_REDIRECT_URI || process.env.ASANA_REDIRECT_URI
+    // На Vercel используем обычные env vars (без VITE_ префикса)
+    const clientId = process.env.ASANA_CLIENT_ID
+    const clientSecret = process.env.ASANA_CLIENT_SECRET
+    const redirectUri = process.env.ASANA_REDIRECT_URI
 
-    console.log('Environment check:', {
-      hasClientId: !!clientId,
-      hasClientSecret: !!clientSecret,
-      hasRedirectUri: !!redirectUri,
-      availableEnvKeys: Object.keys(process.env).filter(k => k.includes('ASANA'))
-    })
+    console.log('Environment variables check:')
+    console.log('- ASANA_CLIENT_ID:', clientId ? `Present (${clientId.substring(0, 10)}...)` : 'MISSING')
+    console.log('- ASANA_CLIENT_SECRET:', clientSecret ? 'Present (hidden)' : 'MISSING')
+    console.log('- ASANA_REDIRECT_URI:', redirectUri || 'MISSING')
+    console.log('- Available ASANA env keys:', Object.keys(process.env).filter(k => k.includes('ASANA')))
 
     if (!clientId || !clientSecret || !redirectUri) {
       console.error('Missing environment variables')
@@ -99,24 +100,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Делаем запрос к Asana OAuth endpoint
+    console.log('Making request to Asana OAuth endpoint...')
+    console.log('Request params:', {
+      grant_type,
+      client_id: clientId?.substring(0, 10) + '...',
+      has_code: !!code,
+      has_refresh_token: !!refresh_token,
+      redirect_uri: redirectUri
+    })
+
     const response = await fetch('https://app.asana.com/-/oauth_token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
       },
       body: params.toString(),
     })
 
+    console.log('Asana API response status:', response.status)
+
     if (!response.ok) {
-      const errorData = await response.json() as AsanaErrorResponse
-      console.error('Asana OAuth error:', errorData)
+      const errorText = await response.text()
+      console.error('Asana OAuth error response:', errorText)
+      
+      let errorData: AsanaErrorResponse
+      try {
+        errorData = JSON.parse(errorText)
+      } catch {
+        errorData = { error: 'parse_error', error_description: errorText }
+      }
+      
       return res.status(response.status).json({
         error: errorData.error || 'Token exchange failed',
-        error_description: errorData.error_description || 'Unknown error',
+        error_description: errorData.error_description || errorText,
       })
     }
 
     const data = await response.json() as AsanaTokenResponse
+    console.log('Token exchange successful')
 
     // Возвращаем токены клиенту
     return res.status(200).json({
