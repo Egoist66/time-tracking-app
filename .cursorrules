@@ -104,7 +104,79 @@ export async function myMiddleware(
 <Button variant="outline" size="sm">Click</Button>
 ```
 
-### Добавление новых компонентов
+### Dialog
+Локация: `@/components/ui/dialog`
+```vue
+<Dialog>
+  <DialogTrigger as-child>
+    <Button>Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Заголовок</DialogTitle>
+      <DialogDescription>Описание</DialogDescription>
+    </DialogHeader>
+    <!-- Контент -->
+    <DialogFooter>
+      <Button>Действие</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Добавление новых компонентов через MCP shadcn-vue
+
+**ВСЕГДА используй MCP shadcn-vue для добавления компонентов!**
+
+#### Пошаговый процесс:
+
+1. **Поиск компонента в регистре:**
+```typescript
+// Используй MCP инструмент
+mcp_shadcnVue_search_items_in_registries({
+  registries: ["@shadcn"],
+  query: "название компонента"  // например: "dialog", "card", "input"
+})
+```
+
+2. **Получение команды установки:**
+```typescript
+mcp_shadcnVue_get_add_command_for_items({
+  items: ["@shadcn/component-name"]  // например: ["@shadcn/dialog"]
+})
+```
+
+3. **Установка компонента:**
+```bash
+pnpm shadcn-vue add @shadcn/component-name
+```
+⚠️ **Важно:** Выполняй с `required_permissions: ["all"]` для работы с pnpm store
+
+4. **Проверка примеров использования (опционально):**
+```typescript
+mcp_shadcnVue_get_item_examples_from_registries({
+  registries: ["@shadcn"],
+  query: "component-name demo"  // или "component-name example"
+})
+```
+
+5. **Использование в проекте:**
+```vue
+<script setup lang="ts">
+import { ComponentName } from '@/components/ui/component-name'
+</script>
+```
+
+#### Доступные компоненты в @shadcn:
+- button, dialog, card, input, label, textarea
+- select, checkbox, radio-group, switch
+- alert, alert-dialog, toast, popover
+- dropdown-menu, context-menu, menubar
+- sheet, tabs, accordion, collapsible
+- table, pagination, avatar, badge
+- и многие другие...
+
+#### Ручное создание (только если компонента нет в MCP):
 1. Создай в `src/components/ui/{component-name}/`
 2. Используй Reka UI Primitive как базу
 3. Стилизация через CVA (class-variance-authority)

@@ -1,9 +1,6 @@
 import type { RouteLocationNormalized } from "vue-router";
+import type { Middleware } from "./types/middleware.types";
 
-export type Middleware = (
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized
-) => Promise<void>;
 
 
 export function middlewareWrapper(...middlewares: Middleware[]): Middleware {

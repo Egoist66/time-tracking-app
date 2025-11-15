@@ -1,6 +1,6 @@
-import type { Middleware } from "./middleware-wrapper"
 import { routeTitle } from "./route-title/route-title"
 import { routeLogger } from "./route-logger/route-logger"
+import type { Middleware } from "./types/middleware.types"
 
 
 const devMiddlewares: Middleware[] = [
