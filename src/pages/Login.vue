@@ -33,8 +33,8 @@ const handleQuickLogin = async () => {
 }
 
 // Проверяем, доступен ли PAT для быстрого входа
-const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN
-const isDev = import.meta.env.DEV
+const hasPersonalToken = !!import.meta.env.VITE_ASANA_TOKEN || !!import.meta.env.ASANA_TOKEN
+//const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
 
 </script>
