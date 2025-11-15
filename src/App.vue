@@ -11,7 +11,6 @@ const noLayoutPages = ['login', 'auth-callback']
   <RouterView v-slot="{ Component, route }">
     <Suspense>
       <template #default>
-        <!-- Страницы с layout (авторизованные) -->
         <AppLayout v-if="!noLayoutPages.includes(route.name as string)">
           <transition v-if="route.name !== 'not-found'" name="route" mode="out-in">
             <component :is="Component" />
@@ -19,7 +18,6 @@ const noLayoutPages = ['login', 'auth-callback']
           <component v-else :is="Component" />
         </AppLayout>
         
-        <!-- Страницы без layout (логин, callback) -->
         <component v-else :is="Component" />
       </template>
       <template #fallback>
