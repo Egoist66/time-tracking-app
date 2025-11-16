@@ -1,26 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { AsanaErrorResponse, AsanaTokenResponse } from './types/auth.type'
 
-/**
- * Интерфейсы для типизации ответов Asana OAuth API
- */
-interface AsanaTokenResponse {
-  access_token: string
-  refresh_token: string
-  expires_in: number
-  token_type: string
-}
 
-interface AsanaErrorResponse {
-  error?: string
-  error_description?: string
-}
-
-/**
- * Vercel Serverless Function для обмена authorization code на access token
- * Это серверный endpoint, который безопасно хранит client_secret
- */
+ 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS headers должны быть установлены ДО любых других операций
+
   const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:4173',
@@ -41,13 +25,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('Origin:', origin)
     console.log('URL:', req.url)
 
-    // Обрабатываем preflight запрос (CORS)
     if (req.method === 'OPTIONS') {
       console.log('OPTIONS request - returning 200')
       return res.status(200).end()
     }
 
-    // Разрешаем только POST запросы
     if (req.method !== 'POST') {
       console.log('Invalid method:', req.method)
       return res.status(405).json({ error: 'Method Not Allowed' })
