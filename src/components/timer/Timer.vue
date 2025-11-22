@@ -24,7 +24,7 @@ const {
   projects,
 } = defineProps<{
   isTimerDialogOpen: boolean;   
-  projects: any[];
+  projects: Array<{ id: string | number; name: string; color: string }>;
 }>();
 
 const timerStore = useTimerStore()

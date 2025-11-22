@@ -3,18 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Clock, Menu, Plus } from "lucide-vue-next";
 import Timer from "@/components/timer/Timer.vue"
 
-import { shallowRef } from "vue";
+import { computed } from "vue";
 import { useTimerStore } from "@/store/timer.store";
+import { useProjectsStore } from "@/store/projects.store";
 import Navigation from "./Navigation.vue";
 import Profile from "../profile/Profile.vue";
 
-const projects = shallowRef([
-  { id: 1, name: "Редизайн сайта", color: "bg-blue-500" },
-  { id: 2, name: "Мобильное приложение", color: "bg-purple-500" },
-  { id: 3, name: "Маркетинговая кампания", color: "bg-green-500" },
-  { id: 4, name: "Встреча с клиентом", color: "bg-orange-500" },
-]);
+const timerStore = useTimerStore();
+const projectsStore = useProjectsStore();
 
+// Не загружаем проекты здесь - они загружаются в Dashboard.vue или при инициализации auth
+// onMounted убран, чтобы избежать дублирования запросов
+
+// Преобразуем проекты из Asana в формат, ожидаемый компонентами
+const sidebarProjects = computed(() => {
+  // Берем первые 5 активных проектов для сайдбара
+  return projectsStore.activeProjects.slice(0, 5).map(project => ({
+    id: project.gid,
+    name: project.name,
+    color: project.color || 'bg-gray-500', // fallback цвет
+  }));
+});
+
+// Все проекты для таймера и других компонентов
+const allProjects = computed(() => {
+  return projectsStore.activeProjects.map(project => ({
+    id: project.gid,
+    name: project.name,
+    color: project.color || 'bg-gray-500',
+  }));
+});
 
 const emit = defineEmits<{
   (e: "toggleSidebar"): void;
@@ -23,9 +41,6 @@ const emit = defineEmits<{
 defineProps<{
   isOpen?: boolean;
 }>();
-
-
-const timerStore = useTimerStore()
 
 </script>
 
@@ -67,12 +82,12 @@ const timerStore = useTimerStore()
 
     <Timer
       :is-timer-dialog-open="timerStore.isTimerDialogOpen"
-      :projects="projects"
+      :projects="allProjects"
       @update:is-timer-dialog-open="timerStore.toggleTimerDialog"
       @start-timer="timerStore.startTimer"
     />
 
-    <Navigation :projects="projects" />
+    <Navigation :projects="sidebarProjects" />
     <Profile @toggleSidebar="$emit('toggleSidebar')" />
    
   </aside>

@@ -21,7 +21,7 @@ const appLinks = shallowRef<{ icon: LucideIcon; to: string; label: string }[]>([
 
 
 defineProps<{
-  projects: Array<{ id: number; name: string; color: string }>;
+  projects: Array<{ id: string | number; name: string; color: string }>;
 }>();
 
 </script>
