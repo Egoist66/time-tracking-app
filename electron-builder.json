@@ -1,0 +1,21 @@
+{
+  "appId": "com.timetracking.app",
+  "productName": "Time Tracking App",
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    "dist",
+    "dist-electron"
+  ],
+  "mac": {
+    "category": "public.app-category.productivity"
+  },
+  "win": {
+    "target": "nsis"
+  },
+  "linux": {
+    "target": "AppImage"
+  }
+}
+
