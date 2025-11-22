@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import electron from 'vite-plugin-electron/simple'
 
 export default defineConfig({
   plugins: [
@@ -17,14 +16,6 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     vueDevTools(),
-    electron({
-      main: {
-        entry: 'electron/main.ts',
-      },
-      preload: {
-        input: 'electron/preload.ts',
-      },
-    }),
   ],
   
   resolve: {
