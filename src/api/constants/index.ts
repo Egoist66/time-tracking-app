@@ -12,5 +12,7 @@ export const asanaToken = import.meta.env.VITE_ASANA_TOKEN;
 export const asanaBaseUrl = "https://app.asana.com/api/1.0";
 export const asanaState =  Math.random().toString(36).substring(2, 15);
 export const asanaScope = "openid email profile default identity";
-export const tokenApiUrl = `${asanaBaseUrl}/auth/token`;
-export const userApiUrl = `${asanaBaseUrl}/users/me`;
+export const tokenApiUrl = import.meta.env.DEV ? 'https://time-tracking-app-sigma.vercel.app/api/auth/token' : '/api/auth/token';
+export const userApiUrl = "https://app.asana.com/api/1.0/users/me";
+
+
