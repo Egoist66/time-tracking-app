@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api\\/.*).*)",
+      "source": "/((?!api\\/.*|.*\\.(js|mjs|css|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|webp|avif|mp4|webm|ogg|mp3|wav|flac|aac)).*)",
       "destination": "/index.html"
     }
   ],
@@ -12,6 +12,24 @@
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://app.asana.com https://time-tracking-app-sigma.vercel.app; img-src 'self' data: https://app.asana.com https://*.asana.com;"
+        }
+      ]
+    },
+    {
+      "source": "/*.(js|mjs)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/*.css",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
         }
       ]
     }
